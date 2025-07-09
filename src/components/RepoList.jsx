@@ -1,5 +1,7 @@
-function RepoList({ repos }) {
-  return (
+import React from "react";
+
+const RepoList = ({ repos }) => {
+ return (
     <div className="repo-list">
       <h3>Repositories (showing latest 5):</h3>
       {repos.map((repo) => (
@@ -15,6 +17,6 @@ function RepoList({ repos }) {
       ))}
     </div>
   );
-}
+};
 
 export default RepoList;
