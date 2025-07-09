@@ -1,6 +1,5 @@
-import React,{ useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { createRoot } from "react-dom/client";
 import "./style.css";
 import SearchForm from "./components/SearchForm";
 import UserInfo from "./components/UserInfo";
@@ -15,32 +14,36 @@ const App = () => {
     setLoading(true);
     try {
       // Fetch user info
-      const userRes = await fetch(`https://api.github.com/users/${username}`);
-      if (!userRes.ok) throw new Error("User not found");
-      const user = await userRes.json();
-      setUserData(user);
+      const userRes = await axios.get(`https://api.github.com/users/${username}`);
+      setUserData(userRes.data);
 
       // Fetch repos
-      const reposRes = await fetch(user.repos_url);
-      const reposData = await reposRes.json();
+      const reposRes = await axios.get(userRes.data.repos_url);
+      const topRepos = reposRes.data.slice(0, 5);
 
-      // For each repo, fetch latest commit
+      // Fetch latest commit for each repo
       const reposWithCommits = await Promise.all(
-        reposData.slice(0, 5).map(async (repo) => {
-          const commitsRes = await fetch(
-            `https://api.github.com/repos/${username}/${repo.name}/commits`
-          );
-          const commits = await commitsRes.json();
-          return {
-            ...repo,
-            latestCommit: commits[0]?.commit?.message || "No commits",
-          };
+        topRepos.map(async (repo) => {
+          try {
+            const commitsRes = await axios.get(
+              `https://api.github.com/repos/${username}/${repo.name}/commits`
+            );
+            return {
+              ...repo,
+              latestCommit: commitsRes.data[0]?.commit?.message || "No commits",
+            };
+          } catch {
+            return {
+              ...repo,
+              latestCommit: "Failed to fetch commits",
+            };
+          }
         })
       );
 
       setRepos(reposWithCommits);
     } catch (error) {
-      alert(error.message);
+      alert(error.response?.data?.message || error.message);
       setUserData(null);
       setRepos([]);
     } finally {
@@ -57,6 +60,6 @@ const App = () => {
       {repos.length > 0 && <RepoList repos={repos} />}
     </div>
   );
-}
+};
 
 export default App;
