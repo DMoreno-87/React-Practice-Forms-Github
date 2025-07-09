@@ -1,4 +1,6 @@
-function UserInfo({ user }) {
+import React from "react";
+
+const UserInfo = ({ user }) => {
   return (
     <div className="user-card">
       <img src={user.avatar_url} alt={user.login} width="100" />
@@ -13,3 +15,6 @@ function UserInfo({ user }) {
 }
 
 export default UserInfo;
+
+
+

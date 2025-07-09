@@ -1,6 +1,6 @@
-import { useState } from "react";
+import React, {useState} from "react";
 
-function SearchForm({ onSearch }) {
+const SearchForm = ({ onSearch }) => {
   const [username, setUsername] = useState("");
 
   const handleSubmit = (e) => {
@@ -25,3 +25,8 @@ function SearchForm({ onSearch }) {
 }
 
 export default SearchForm;
+
+
+
+
+

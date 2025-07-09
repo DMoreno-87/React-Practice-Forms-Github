@@ -1,9 +1,12 @@
-import { useState } from "react";
+import React,{ useState } from "react";
+import axios from "axios";
+import { createRoot } from "react-dom/client";
+import "./style.css";
 import SearchForm from "./components/SearchForm";
 import UserInfo from "./components/UserInfo";
 import RepoList from "./components/RepoList";
 
-function App() {
+const App = () => {
   const [userData, setUserData] = useState(null);
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(false);
